@@ -140,6 +140,7 @@ public class Controller implements Initializable {
                 for (GRFigure figure:newFigureList
                 ) {
                     figure.draw(grpMain);
+                    figureList.add(figure);
                 }
             }
         } catch (Exception e) {
