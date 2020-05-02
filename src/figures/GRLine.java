@@ -1,23 +1,32 @@
 package figures;
 
+import control.SerializableColor;
 import javafx.scene.Group;
+import javafx.scene.Node;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
 
-public class GRLine extends Line implements GRFigure {
-    private static String name = "Line";
+import java.awt.*;
 
-    public GRLine(GRPoint point1, GRPoint point2, Color color){
-        this.setStartX(point1.x);
-        this.setStartY(point1.y);
-        this.setEndX(point2.x);
-        this.setEndY(point2.y);
-        this.setFill(color);
-        this.setStroke(color);
+public class GRLine extends GRFigure {
+    private GRPoint start = new GRPoint();
+    private GRPoint end = new GRPoint();
+    private SerializableColor color;
+
+    public GRLine(GRPoint point1, GRPoint point2, SerializableColor color){
+        this.start.x = point1.x;
+        this.start.y = point1.y;
+        this.end.x = point2.x;
+        this.end.y = point2.y;
+        this.color = color;
+        this.name = "Line";
     }
 
     @Override
-    public void draw(Group root) {
-        root.getChildren().add(this);
+    public Node draw(Group group) {
+        Line boof = new Line(start.x, start.y, end.x, end.y);
+        boof.setStroke(this.color.getFXColor());
+        group.getChildren().add(boof);
+        return boof;
     }
 }

@@ -14,7 +14,6 @@ public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception{
-        //Group root = new Group();
         Parent root = FXMLLoader.load(getClass().getResource("sample.fxml"));
         primaryStage.setTitle("Graphics Editor");
         Scene scene = new Scene(root, SCREEN_WIDTH, SCREEN_HEIGTH, Color.WHITE);

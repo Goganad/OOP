@@ -1,28 +1,28 @@
 package figures;
 
+import control.SerializableColor;
 import javafx.scene.Group;
-import javafx.scene.paint.Color;
+import javafx.scene.Node;
 import javafx.scene.shape.Circle;
 
-public class GRCircle extends Circle implements GRFigure {
+public class GRCircle extends GRFigure {
     private static double radius;
-    private static String name = "Circle";
+    private GRPoint center = new GRPoint();
+    private SerializableColor color;
 
-    public GRCircle(GRPoint point1, GRPoint point2, Color color){
-        radius = Math.sqrt(Math.pow(point2.x - point1.x, 2) + Math.pow(point2.y - point1.y, 2));
-        this.setCenterX(point1.x);
-        this.setCenterY(point1.y);
-        this.setRadius(radius);
-        this.setFill(color);
-        this.setStroke(color);
-    }
-
-    public static String getName(){
-        return "Circle";
+    public GRCircle(GRPoint point1, GRPoint point2, SerializableColor color){
+        this.radius = Math.sqrt(Math.pow(point2.x - point1.x, 2) + Math.pow(point2.y - point1.y, 2));
+        this.center.x = point1.x;
+        this.center.y = point1.y;
+        this.color = color;
+        this.name = "Circle";
     }
 
     @Override
-    public void draw(Group root) {
-        root.getChildren().add(this);
+    public Node draw(Group group) {
+        Circle boof = new Circle(this.center.x, this.center.y, radius);
+        boof.setFill(this.color.getFXColor());
+        group.getChildren().add(boof);
+        return boof;
     }
 }

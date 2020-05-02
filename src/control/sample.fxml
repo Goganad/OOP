@@ -10,7 +10,7 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.VBox?>
 
-<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onMouseDragged="#paneMouseDrag" onMousePressed="#paneMouseClick" onMouseReleased="#paneMouseRelease" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="control.Controller">
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="control.Controller">
    <children>
       <Pane onMouseDragged="#paneMouseDrag" onMousePressed="#paneMouseClick" onMouseReleased="#paneMouseRelease" prefHeight="400.0" prefWidth="600.0">
          <children>
@@ -23,7 +23,8 @@
               <menus>
                 <Menu mnemonicParsing="false" text="File">
                   <items>
-                    <MenuItem mnemonicParsing="false" text="Close" />
+                        <MenuItem mnemonicParsing="false" onAction="#fileOpen" text="Open" />
+                    <MenuItem mnemonicParsing="false" onAction="#fileSaveAs" text="Save as" />
                   </items>
                 </Menu>
                 <Menu mnemonicParsing="false" text="Help">

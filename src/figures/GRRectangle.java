@@ -1,44 +1,47 @@
 package figures;
 
+import control.SerializableColor;
 import javafx.scene.Group;
+import javafx.scene.Node;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Polygon;
 import javafx.scene.shape.Rectangle;
 
-public class GRRectangle extends Rectangle implements GRFigure {
-    private static String name = "Rectangle";
-    private double a;
-    private double b;
+import java.awt.*;
 
-    public GRRectangle(GRPoint point1, GRPoint point2, Color color){
-       a = 2*Math.abs(point1.x - point2.x);
-       b = 2*Math.abs(point1.y - point2.y);
-       this.setWidth(a);
-       this.setHeight(b);
+public class GRRectangle extends GRFigure {
+    private double width;
+    private double height;
+    private GRPoint leftTopPoint = new GRPoint();
+    private SerializableColor color;
+
+    public GRRectangle(GRPoint point1, GRPoint point2, SerializableColor color){
+       this.width = 2*Math.abs(point1.x - point2.x);
+       this.height = 2*Math.abs(point1.y - point2.y);
        if(point2.y < point1.y && point1.x < point2.x){
-           this.setX(point2.x - a);
-           this.setY(point2.y);
+           this.leftTopPoint.x = point2.x - width;
+           this.leftTopPoint.y = point2.y;
        } else
        if(point2.y < point1.y && point1.x > point2.x){
-           this.setX(point2.x);
-           this.setY(point2.y);
+           this.leftTopPoint.x = point2.x;
+           this.leftTopPoint.y = point2.y;
        } else
        if(point2.y > point1.y && point1.x > point2.x){
-           this.setX(point2.x);
-           this.setY(point2.y - b);
+           this.leftTopPoint.x = point2.x;
+           this.leftTopPoint.y = point2.y - height;
        } else {
-           this.setX(point2.x - a);
-           this.setY(point2.y - b);
+           this.leftTopPoint.x = point2.x - width;
+           this.leftTopPoint.y = point2.y - height;
        }
-        this.setFill(color);
-        this.setStroke(color);
-    }
-
-    public static String getName(){
-        return "Rectangle";
+        this.color = color;
+        this.name = "Rectangle";
     }
 
     @Override
-    public void draw(Group root) {
-        root.getChildren().add(this);
+    public Node draw(Group group) {
+        Rectangle boof = new Rectangle(leftTopPoint.x, leftTopPoint.y, width, height);
+        boof.setFill(this.color.getFXColor());
+        group.getChildren().add(boof);
+        return boof;
     }
 }
