@@ -63,7 +63,6 @@ public class Controller implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        fileChooser.setInitialDirectory(new File("/Users/igornadenenko/Documents/Graphics Editor"));
         try {
             Class neededParameterType1 = Class.forName("figures.GRPoint");
             Class neededParameterType2 = Class.forName("control.SerializableColor");
@@ -126,20 +125,22 @@ public class Controller implements Initializable {
 
     @FXML
     void fileOpen(ActionEvent event) {
-        stage = this.clrPicker.getScene().getWindow();
-        fileChooser.setTitle("Open Dialog");
-        fileChooser.setInitialFileName("figures.gr");
-        fileChooser.getExtensionFilters().add(
-                new FileChooser.ExtensionFilter("graphics file", "*.gr")
-        );
-        File file = fileChooser.showOpenDialog(stage);
         try {
-            ObjectInputStream inputStream = new ObjectInputStream(new FileInputStream(file));
-            ArrayList<GRFigure> newFigureList = (ArrayList<GRFigure>)inputStream.readObject();
-            grpMain.getChildren().removeAll();
-            for (GRFigure figure:newFigureList
-                 ) {
-                figure.draw(grpMain);
+            stage = this.clrPicker.getScene().getWindow();
+            fileChooser.setTitle("Open Dialog");
+            fileChooser.setInitialFileName("figures.gr");
+            fileChooser.getExtensionFilters().add(
+                    new FileChooser.ExtensionFilter("graphics file", "*.gr")
+            );
+            File file = fileChooser.showOpenDialog(stage);
+            if (file!=null) {
+                ObjectInputStream inputStream = new ObjectInputStream(new FileInputStream(file));
+                ArrayList<GRFigure> newFigureList = (ArrayList<GRFigure>)inputStream.readObject();
+                grpMain.getChildren().removeAll();
+                for (GRFigure figure:newFigureList
+                ) {
+                    figure.draw(grpMain);
+                }
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -148,16 +149,18 @@ public class Controller implements Initializable {
 
     @FXML
     void fileSaveAs(ActionEvent event) {
-        stage = this.clrPicker.getScene().getWindow();
-        fileChooser.setTitle("Save Dialog");
-        fileChooser.setInitialFileName("figures.gr");
-        fileChooser.getExtensionFilters().add(
-                new FileChooser.ExtensionFilter("Graphics file", "*.gr")
-        );
-        File file = fileChooser.showSaveDialog(stage);
         try {
-            ObjectOutputStream outputStream = new ObjectOutputStream(new FileOutputStream(file));
-            outputStream.writeObject(figureList.figures);
+            stage = this.clrPicker.getScene().getWindow();
+            fileChooser.setTitle("Save Dialog");
+            fileChooser.setInitialFileName("figures.gr");
+            fileChooser.getExtensionFilters().add(
+                    new FileChooser.ExtensionFilter("Graphics file", "*.gr")
+            );
+            File file = fileChooser.showSaveDialog(stage);
+            if (file!=null) {
+                ObjectOutputStream outputStream = new ObjectOutputStream(new FileOutputStream(file));
+                outputStream.writeObject(figureList.figures);
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
