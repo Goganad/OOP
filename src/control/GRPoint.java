@@ -1,4 +1,4 @@
-package figures;
+package control;
 
 import java.io.Serializable;
 

@@ -1,6 +1,7 @@
 package figures;
 
 import control.GRFigure;
+import control.GRPoint;
 import control.SerializableColor;
 import javafx.scene.Group;
 import javafx.scene.Node;

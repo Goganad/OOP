@@ -1,3 +1,5 @@
+package figures;
+
 import control.GRFigure;
 import control.SerializableColor;
 import javafx.scene.Group;

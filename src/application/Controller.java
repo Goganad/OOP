@@ -4,7 +4,7 @@ import control.FigureCreator;
 import control.FigureList;
 import control.GRFigure;
 import control.SerializableColor;
-import figures.GRPoint;
+import control.GRPoint;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -186,4 +186,26 @@ public class Controller implements Initializable {
         }
         return classes;
     }
+
+    public static void getClassesFromJARsDirectory(String directoryPath) throws Exception {
+        File directory = new File(directoryPath);
+
+        if (directory.exists()) {
+            File[] jars = directory.listFiles(((dir, name) -> name.endsWith(".jar")));
+            if (jars != null && jars.length != 0) {
+
+                Vector<String> classes = new Vector<>();
+                Vector<URL> urls = new Vector<>();
+
+                for (File file : jars) {
+                    JarFile jarFile = new JarFile(file);
+                    jarFile.stream().forEach(jarEntry -> {if (jarEntry.getName().endsWith(".class"))
+                        System.out.println(jarEntry.getRealName());});
+                }
+            } else {
+                throw new Exception("Directory does not exist");
+            }
+        }
+    }
+
 }

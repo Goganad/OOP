@@ -3,7 +3,7 @@ package creators;
 import control.FigureCreator;
 import control.FigureList;
 import control.SerializableColor;
-import figures.GRPoint;
+import control.GRPoint;
 import figures.GRRectangle;
 import javafx.scene.Group;
 import javafx.scene.input.MouseEvent;

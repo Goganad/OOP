@@ -4,7 +4,7 @@ import control.FigureCreator;
 import control.FigureList;
 import control.SerializableColor;
 import figures.GRPentagon;
-import figures.GRPoint;
+import control.GRPoint;
 import javafx.scene.Group;
 import javafx.scene.input.MouseEvent;
 
