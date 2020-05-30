@@ -1,8 +1,5 @@
 package control;
 
-import figures.GRFigure;
-import javafx.scene.Node;
-
 import java.io.Serializable;
 import java.util.ArrayList;
 

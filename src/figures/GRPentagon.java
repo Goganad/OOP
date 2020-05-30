@@ -1,12 +1,10 @@
 package figures;
 
+import control.GRFigure;
 import control.SerializableColor;
 import javafx.scene.Group;
 import javafx.scene.Node;
-import javafx.scene.paint.Color;
 import javafx.scene.shape.Polygon;
-
-import java.awt.*;
 
 public class GRPentagon extends GRFigure {
     private double radius;
@@ -41,7 +39,6 @@ public class GRPentagon extends GRFigure {
         this.radius = Math.sqrt(Math.pow(point2.x - point1.x, 2) + Math.pow(point2.y - point1.y, 2));
         this.points = getHexagonPoints(radius, alphaOffset, point1.x, point1.y);
         this.color = color;
-        this.name = "Pentagon";
     }
 
     @Override

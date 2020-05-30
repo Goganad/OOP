@@ -1,14 +1,17 @@
-package control;
+package application;
 
-import figures.GRFigure;
+import control.FigureCreator;
+import control.FigureList;
+import control.GRFigure;
+import control.SerializableColor;
 import figures.GRPoint;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Group;
-import javafx.scene.Node;
 import javafx.scene.control.ColorPicker;
 import javafx.scene.control.ComboBox;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.FileChooser;
 import javafx.stage.Window;
@@ -20,6 +23,8 @@ import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
+import java.util.Vector;
+import java.util.jar.JarFile;
 
 
 public class Controller implements Initializable {
@@ -28,22 +33,19 @@ public class Controller implements Initializable {
 
     private ArrayList<Class> classes = new ArrayList<>();
     private ArrayList<String> figureNames = new ArrayList<>();
+    private ArrayList<FigureCreator> figureCreators = new ArrayList<>();
     FigureList figureList = new FigureList();
     private Constructor[] figureConstructors;
-    private ArrayList<Constructor> constructors = new ArrayList<>();
-    private GRFigure figure = null;
-    private Node boofer = null;
     private int itemIndex = 0;
-    private int grpIndex = 0;
 
     @FXML
-    private Group grpMain;
+    private Group grpMain = new Group();
 
     @FXML
-    private ColorPicker clrPicker;
+    private ColorPicker clrPicker = new ColorPicker();
 
     @FXML
-    private ComboBox<String> boxShape;
+    private ComboBox<String> boxShape = new ComboBox<>();
 
     private Window stage;
     private FileChooser fileChooser = new FileChooser();
@@ -64,30 +66,29 @@ public class Controller implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         try {
-            Class neededParameterType1 = Class.forName("figures.GRPoint");
-            Class neededParameterType2 = Class.forName("control.SerializableColor");
-            classes = getClassesFromPackage("figures");
+            Class neededParameterType1 = Class.forName("javafx.scene.Group");
+            Class neededParameterType2 = Class.forName("control.FigureList");
+            classes = getClassesFromPackage("creators");
             System.out.println(classes);
 
             for (Class cl: classes) {
                 figureConstructors = cl.getConstructors();
                 for (Constructor constructor : figureConstructors) {
-                    if (constructor.getParameterCount() == 3 &&
+                    if (constructor.getParameterCount() == 2 &&
                             constructor.getParameterTypes()[0] == neededParameterType1 &&
-                            constructor.getParameterTypes()[1] == neededParameterType1 &&
-                            constructor.getParameterTypes()[2] == neededParameterType2){
-                        GRFigure figure;
-                        SerializableColor color = new SerializableColor(clrPicker.getValue());
-                        figure = (GRFigure) constructor.newInstance(point1, point2, color);
-                        Class figureClass = figure.getClass();
+                            constructor.getParameterTypes()[1] == neededParameterType2){
+                        FigureCreator figureCreator;
+                        figureCreator = (FigureCreator) constructor.newInstance(grpMain, figureList);
+                        Class figureClass = figureCreator.getClass();
                         Field nameField = getField(figureClass, "name");
                         nameField.setAccessible(true);
-                        figureNames.add((String)nameField.get(figure));
-                        constructors.add(constructor);
+                        figureNames.add((String)nameField.get(figureCreator));
+                        figureCreators.add(figureCreator);
                     }
                 }
             }
             boxShape.getItems().addAll(figureNames);
+
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -96,31 +97,29 @@ public class Controller implements Initializable {
     }
 
     @FXML
-    void paneMouseClick(MouseEvent event) {
-        point1.x = (int)event.getX();
-        point1.y = (int)event.getY();
+    void paneMouseClick(MouseEvent event) throws IllegalAccessException, InvocationTargetException, InstantiationException {
         for (int i = 0;i<figureNames.size();i++) {
-            if (figureNames.get(i) == boxShape.getValue()){
+            if (figureNames.get(i).equals(boxShape.getValue())){
                 itemIndex = i;
             }
         }
+        figureCreators.get(itemIndex).create(event, new SerializableColor(clrPicker.getValue()));
+        System.out.println(figureList.figures);
     }
 
     @FXML
     void paneMouseDrag(MouseEvent event) throws IllegalAccessException, InvocationTargetException, InstantiationException {
-        grpMain.getChildren().remove(boofer);
-        point2.x = (int)event.getX();
-        point2.y = (int)event.getY();
-        figure = (GRFigure) constructors.get(itemIndex).newInstance(point1, point2, new SerializableColor(clrPicker.getValue()));
-        boofer = figure.draw(grpMain);
+        figureCreators.get(itemIndex).create(event, new SerializableColor(clrPicker.getValue()));
     }
 
     @FXML
-    void paneMouseRelease(MouseEvent event) throws IllegalAccessException, InvocationTargetException, InstantiationException {
-        figure = (GRFigure) constructors.get(itemIndex).newInstance(point1, point2, new SerializableColor(clrPicker.getValue()));
-        boofer = figure.draw(grpMain);
-        figureList.add(figure);
-        System.out.println(figureList.figures);
+    void paneMouseRelease(MouseEvent event){
+        figureCreators.get(itemIndex).create(event, new SerializableColor(clrPicker.getValue()));
+    }
+
+    @FXML
+    void paneOnKeyPressed(KeyEvent event){
+        figureCreators.get(itemIndex).create(event);
     }
 
     @FXML
@@ -187,5 +186,4 @@ public class Controller implements Initializable {
         }
         return classes;
     }
-
 }

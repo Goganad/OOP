@@ -1,17 +1,12 @@
 package figures;
 
+import control.GRFigure;
 import control.SerializableColor;
 import javafx.scene.Group;
 import javafx.scene.Node;
-import javafx.scene.paint.Color;
 import javafx.scene.shape.Polygon;
 
-import java.awt.*;
-import java.io.Serializable;
-
 public class GRHexagon extends GRFigure {
-    private static String name = "Hexagon";
-
     private double radius;
     private double alphaOffset;
     private Double[] points;

@@ -1,13 +1,10 @@
 package figures;
 
+import control.GRFigure;
 import control.SerializableColor;
 import javafx.scene.Group;
 import javafx.scene.Node;
-import javafx.scene.paint.Color;
-import javafx.scene.shape.Polygon;
 import javafx.scene.shape.Rectangle;
-
-import java.awt.*;
 
 public class GRRectangle extends GRFigure {
     private double width;
@@ -34,7 +31,6 @@ public class GRRectangle extends GRFigure {
            this.leftTopPoint.y = point2.y - height;
        }
         this.color = color;
-        this.name = "Rectangle";
     }
 
     @Override

@@ -1,12 +1,10 @@
 package figures;
 
+import control.GRFigure;
 import control.SerializableColor;
 import javafx.scene.Group;
 import javafx.scene.Node;
-import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
-
-import java.awt.*;
 
 public class GRLine extends GRFigure {
     private GRPoint start = new GRPoint();
@@ -19,7 +17,6 @@ public class GRLine extends GRFigure {
         this.end.x = point2.x;
         this.end.y = point2.y;
         this.color = color;
-        this.name = "Line";
     }
 
     @Override

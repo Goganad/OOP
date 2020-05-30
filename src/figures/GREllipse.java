@@ -1,12 +1,10 @@
 package figures;
 
+import control.GRFigure;
 import control.SerializableColor;
 import javafx.scene.Group;
 import javafx.scene.Node;
-import javafx.scene.paint.Color;
 import javafx.scene.shape.Ellipse;
-
-import java.awt.*;
 
 public class GREllipse extends GRFigure {
     private GRPoint center = new GRPoint();
@@ -19,7 +17,6 @@ public class GREllipse extends GRFigure {
         this.radiusY = Math.abs(point2.y - point1.y);
         this.center.x = point1.x;
         this.center.y = point1.y;
-        this.name = "Ellipse";
     }
 
     @Override
