@@ -21,9 +21,9 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
+import java.net.URLClassLoader;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
-import java.util.Vector;
 import java.util.jar.JarFile;
 
 
@@ -69,6 +69,8 @@ public class Controller implements Initializable {
             Class neededParameterType1 = Class.forName("javafx.scene.Group");
             Class neededParameterType2 = Class.forName("control.FigureList");
             classes = getClassesFromPackage("creators");
+            classes.addAll(getClassesFromJARsDirectory("plugins"));
+
             System.out.println(classes);
 
             for (Class cl: classes) {
@@ -88,6 +90,7 @@ public class Controller implements Initializable {
                 }
             }
             boxShape.getItems().addAll(figureNames);
+
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -168,7 +171,7 @@ public class Controller implements Initializable {
 
     private static ArrayList<Class> getClassesFromPackage(String packageName) throws IOException, ClassNotFoundException {
         ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
-        ArrayList<Class> classes = new ArrayList<Class>();
+        ArrayList<Class> classes = new ArrayList<>();
 
         packageName = packageName.replace(".", "/");
         URL packageURL = classLoader.getResource(packageName);
@@ -187,25 +190,50 @@ public class Controller implements Initializable {
         return classes;
     }
 
-    public static void getClassesFromJARsDirectory(String directoryPath) throws Exception {
+    public static ArrayList<Class<?>> getClassesFromJARsDirectory(String directoryPath) throws Exception {
         File directory = new File(directoryPath);
 
         if (directory.exists()) {
             File[] jars = directory.listFiles(((dir, name) -> name.endsWith(".jar")));
             if (jars != null && jars.length != 0) {
 
-                Vector<String> classes = new Vector<>();
-                Vector<URL> urls = new Vector<>();
+                ArrayList<String> classes = new ArrayList<>();
+                ArrayList<URL> urls = new ArrayList<>();
 
                 for (File file : jars) {
                     JarFile jarFile = new JarFile(file);
-                    jarFile.stream().forEach(jarEntry -> {if (jarEntry.getName().endsWith(".class"))
-                        System.out.println(jarEntry.getRealName());});
+                    jarFile.stream().forEach(jarEntry -> {
+                        if (jarEntry.getName().endsWith(".class")) classes.add(jarEntry.getName());
+                    });
+                    urls.add(file.toURI().toURL());
                 }
+
+                URL[] urlsArray = new URL[urls.size()];
+                for (int i = 0; i < urls.size(); i++) {
+                    urlsArray[i] = urls.get(i);
+                }
+
+                URLClassLoader classLoader = new URLClassLoader(urlsArray);
+                ArrayList<Class<?>> loadedClasses = new ArrayList<>();
+
+                classes.forEach(className -> {
+                    try {
+                        loadedClasses.add(classLoader.loadClass(className.replaceAll("/", ".").replace(".class", "")));
+                    } catch (ClassNotFoundException e) {
+                        e.printStackTrace();
+                    }
+                });
+
+                classLoader.clearAssertionStatus();
+                classLoader.close();
+
+                return loadedClasses;
             } else {
                 throw new Exception("Directory does not exist");
             }
+
         }
+        return null;
     }
 
 }
